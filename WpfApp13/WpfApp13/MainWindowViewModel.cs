@@ -46,8 +46,10 @@ namespace WpfApp13
             }
 
         }
-
-
+        public Command SendMessageCommand { get; set; }
+        public void SendToServer(string smt)
+        => client.GetStream().Write(Encoding.UTF8.GetBytes(smt), 0, Encoding.UTF8.GetBytes(smt).Length);
+        
         public MainWindowViewModel()
         {
 
@@ -61,10 +63,8 @@ namespace WpfApp13
             client.Connect(ip, port);
 
             Random random = new Random();
-            NetworkStream networkStream = client.GetStream();
-            byte[] buffer = new byte[255];
-            buffer = Encoding.UTF8.GetBytes("<MyName>user"+random.Next(0,1000).ToString());
-            networkStream.Write(buffer, 0, buffer.Length);
+            SendToServer("<MyName>user" + random.Next(0, 1000).ToString());
+            
 
             Task.Factory.StartNew(() => { Listner(); });
         }
@@ -77,27 +77,27 @@ namespace WpfApp13
                 NetworkStream stream = client.GetStream();
                 byte[] buffer = new byte[255];
                 stream.Read(buffer, 0, 255);
-              
+                
                 string temp = Encoding.UTF8.GetString(buffer);
-
-
-
+                temp = temp.Remove(temp.IndexOf('\0') + 1);
+                if(temp.Contains("<Onlines>|"))
+                {
+                    temp= temp.Remove(0,10);
+                   temp = temp.Remove(temp.IndexOf("|<end>"));
+                    Online = temp.Split('|').ToList();
+                }
+                else
                 if (temp.IndexOf(":")>0)
-                {// Игорь: Привет
+                {
                     temp =temp.Remove(temp.IndexOf('\0'));
-                    Messages.Add (new MessageChat(temp.Remove(temp.IndexOf(":") + 1),
-                        temp.Remove(0, temp.IndexOf(":") + 1), DateTime.Now));
+                    Messages.Add (new MessageChat(temp.Remove(temp.IndexOf(":") + 1),  temp.Remove(0, temp.IndexOf(":") + 1), DateTime.Now));
                     Messages = new List<MessageChat>(Messages);
                 }
             }
         }
-        public Command SendMessageCommand { get; set; }
         void SendMessage(object parametr)
         {
-            NetworkStream networkStream = client.GetStream();
-            byte[] buffer = new byte[255];
-            buffer = Encoding.UTF8.GetBytes(Message + "\0\0");
-            networkStream.Write(buffer, 0, buffer.Length);
+            SendToServer(Message +"\0\0");
             Message = "";
         }
 

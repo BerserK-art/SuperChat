@@ -41,10 +41,8 @@ namespace ChatServer
             bool isOnline = true;
             while(isOnline)
             {
-               
                     NetworkStream stream = client._client.GetStream();
                     byte[] buffer = new byte[255];
-
                 try
                 {
                     stream.Read(buffer, 0, 255);
@@ -59,11 +57,10 @@ namespace ChatServer
                     else
                     {
                         string message = client._name + ":" + something;
-                        Console.WriteLine((Encoding.UTF8.GetString(buffer)));
                         if (buffer.Length > 0)
                         {
                             SendToAll(message);
-                            //  Console.WriteLine(message);
+                             Console.WriteLine(message);
                         }
                     }
                 }

@@ -4,3 +4,10 @@ C:\Users\STUDENT\source\repos\ChatServer\ChatServer\bin\Debug\ChatServer.pdb
 C:\Users\STUDENT\source\repos\ChatServer\ChatServer\obj\Debug\ChatServer.csprojAssemblyReference.cache
 C:\Users\STUDENT\source\repos\ChatServer\ChatServer\obj\Debug\ChatServer.exe
 C:\Users\STUDENT\source\repos\ChatServer\ChatServer\obj\Debug\ChatServer.pdb
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\bin\Debug\ChatServer.exe.config
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\bin\Debug\ChatServer.exe
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\bin\Debug\ChatServer.pdb
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\obj\Debug\ChatServer.csprojAssemblyReference.cache
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\obj\Debug\ChatServer.csproj.CoreCompileInputs.cache
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\obj\Debug\ChatServer.exe
+C:\Users\user\Source\Repos\SuperChat\MyChatServer\ChatServer\obj\Debug\ChatServer.pdb
