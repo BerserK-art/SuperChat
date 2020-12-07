@@ -23,6 +23,7 @@ namespace WpfApp13
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Message"));
             }
         }
+
         private  List<MessageChat> _messages;
         public  List<MessageChat> Messages
         {
@@ -33,50 +34,8 @@ namespace WpfApp13
             }
 
         }
+
         private List<string> _online;
-
-        public MainWindowViewModel()
-        {
-            SendMessageCommand = new Command(SendMessage);
-            Messages = new List<MessageChat>()
-            {
-                new MessageChat("artem","privet",DateTime.Now),
-                new MessageChat("artem","Hello",DateTime.Now),
-            };
-            IPAddress ip = IPAddress.Parse("127.0.0.1");
-            int port = 8888;
-            client = new TcpClient();
-            client.Connect(ip, port);
-           Task.Factory.StartNew(() => { Listner(); });
-        }
-        void Listner()
-        {
-            while (true)
-            {
-                NetworkStream stream = client.GetStream();
-                byte[] buffer = new byte[255];
-                stream.Read(buffer, 0, 255);
-              
-                    string temp = Encoding.UTF8.GetString(buffer);
-                Console.WriteLine(temp);
-              //  temp = temp.Remove(temp.IndexOf('\0'));
-              //  Console.WriteLine(temp);
-                if (temp.IndexOf(":")>0)
-                {
-
-                    string name = temp.Remove(temp.IndexOf(":")+1);
-                    string info = temp.Remove(0, temp.IndexOf(":")+1);
-                    info = info.Remove(info.IndexOf('\0')) ;
-                    MessageChat newmessage = new MessageChat(name, info, DateTime.Now);
-                    Messages.Add (newmessage);
-                  
-                }
-               
-              
-
-            }
-        }
-
         public List<string> Online
         {
             get { return _online; }
@@ -87,8 +46,53 @@ namespace WpfApp13
             }
 
         }
+
+
+        public MainWindowViewModel()
+        {
+
+            SendMessageCommand = new Command(SendMessage);
+            Messages = new List<MessageChat>();
+
+            IPAddress ip = IPAddress.Parse("127.0.0.1");
+            int port = 8888;
+
+            client = new TcpClient();
+            client.Connect(ip, port);
+
+            Random random = new Random();
+            NetworkStream networkStream = client.GetStream();
+            byte[] buffer = new byte[255];
+            buffer = Encoding.UTF8.GetBytes("<MyName>user"+random.Next(0,1000).ToString());
+            networkStream.Write(buffer, 0, buffer.Length);
+
+            Task.Factory.StartNew(() => { Listner(); });
+        }
+
+
+        void Listner()
+        {
+            while (true)
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[255];
+                stream.Read(buffer, 0, 255);
+              
+                string temp = Encoding.UTF8.GetString(buffer);
+
+
+
+                if (temp.IndexOf(":")>0)
+                {// Игорь: Привет
+                    temp =temp.Remove(temp.IndexOf('\0'));
+                    Messages.Add (new MessageChat(temp.Remove(temp.IndexOf(":") + 1),
+                        temp.Remove(0, temp.IndexOf(":") + 1), DateTime.Now));
+                    Messages = new List<MessageChat>(Messages);
+                }
+            }
+        }
         public Command SendMessageCommand { get; set; }
-       void SendMessage(object parametr)
+        void SendMessage(object parametr)
         {
             NetworkStream networkStream = client.GetStream();
             byte[] buffer = new byte[255];
@@ -96,6 +100,7 @@ namespace WpfApp13
             networkStream.Write(buffer, 0, buffer.Length);
             Message = "";
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
