@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp13"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="SuperChat" Height="450" Width="800">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
@@ -30,8 +30,8 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding  Name, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="0"></Label>
-                        <Label Content="{Binding  Date,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"></Label>
+                        <Label Content="{Binding  Name, UpdateSourceTrigger=PropertyChanged}" Background="Coral" Grid.Row="0" Grid.Column="0"></Label>
+                        <Label Content="{Binding  Date,UpdateSourceTrigger=PropertyChanged}" Background="LawnGreen" Grid.Row="0" Grid.Column="1"></Label>
                         <Label Content="{Binding  Info,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.ColumnSpan="2"></Label>
                     </Grid>
                 </DataTemplate>

@@ -32,7 +32,8 @@ namespace ChatServer
             clients.ForEach(el => text += (el._name + "|"));
             return text += "<end>";  
         }
-        public static void SendToAll(string smt)=> clients.ForEach(el => el._client.GetStream().Write(Encoding.UTF8.GetBytes(smt), 0, Encoding.UTF8.GetBytes(smt).Length));
+        public static void SendToAll(string smt)=>
+            clients.ForEach(el => el._client.GetStream().Write(Encoding.UTF8.GetBytes(smt), 0, Encoding.UTF8.GetBytes(smt).Length));
      
 
        static  void Listner (Client client)

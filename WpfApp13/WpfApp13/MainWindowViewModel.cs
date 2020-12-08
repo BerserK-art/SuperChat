@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace WpfApp13
@@ -47,58 +49,94 @@ namespace WpfApp13
 
         }
         public Command SendMessageCommand { get; set; }
-        public void SendToServer(string smt)
-        => client.GetStream().Write(Encoding.UTF8.GetBytes(smt), 0, Encoding.UTF8.GetBytes(smt).Length);
+        public void SendToServer(string smt)=>  client.GetStream().Write(Encoding.UTF8.GetBytes(smt), 0, Encoding.UTF8.GetBytes(smt).Length);
         
         public MainWindowViewModel()
         {
 
-            SendMessageCommand = new Command(SendMessage);
+            
             Messages = new List<MessageChat>();
 
             IPAddress ip = IPAddress.Parse("127.0.0.1");
             int port = 8888;
-
-            client = new TcpClient();
-            client.Connect(ip, port);
-
-            Random random = new Random();
-            SendToServer("<MyName>user" + random.Next(0, 1000).ToString());
-            
-
-            Task.Factory.StartNew(() => { Listner(); });
+           
+            try
+            {
+                client = new TcpClient();
+                client.Connect(ip, port);
+                SendMessageCommand = new Command(SendMessage);
+                Random random = new Random();
+                SendToServer("<MyName>user" + random.Next(0, 1000).ToString());
+                Task.Factory.StartNew(() => { Listner(); });
+            }
+            catch
+            {
+                Unconnected();
+            }
+           
         }
-
+        public  void Unconnected()
+        {
+            SendMessageCommand = null;
+              MessageBox.Show("you are not connected");
+        }
 
         void Listner()
         {
-            while (true)
+            try
             {
-                NetworkStream stream = client.GetStream();
-                byte[] buffer = new byte[255];
-                stream.Read(buffer, 0, 255);
-                
-                string temp = Encoding.UTF8.GetString(buffer);
-                temp = temp.Remove(temp.IndexOf('\0') + 1);
-                if(temp.Contains("<Onlines>|"))
+                while (true)
                 {
-                    temp= temp.Remove(0,10);
-                   temp = temp.Remove(temp.IndexOf("|<end>"));
-                    Online = temp.Split('|').ToList();
+                    NetworkStream stream = client.GetStream();
+                    byte[] buffer = new byte[255];
+
+
+                    stream.Read(buffer, 0, 255);
+
+                    string temp = Encoding.UTF8.GetString(buffer);
+                    temp = temp.Remove(temp.IndexOf('\0') + 1);
+                    if (temp.Contains("<Onlines>|"))
+                    {
+                        temp = temp.Remove(0, 10);
+                        temp = temp.Remove(temp.IndexOf("|<end>"));
+                        Online = temp.Split('|').ToList();
+                    }
+                    else
+                    if (temp.IndexOf(":") > 0)
+                    {
+                        temp = temp.Remove(temp.IndexOf('\0'));
+                        Messages.Add(new MessageChat(temp.Remove(temp.IndexOf(":") + 1), temp.Remove(0, temp.IndexOf(":") + 1), DateTime.Now));
+                        Messages = new List<MessageChat>(Messages);
+                    }
                 }
-                else
-                if (temp.IndexOf(":")>0)
-                {
-                    temp =temp.Remove(temp.IndexOf('\0'));
-                    Messages.Add (new MessageChat(temp.Remove(temp.IndexOf(":") + 1),  temp.Remove(0, temp.IndexOf(":") + 1), DateTime.Now));
-                    Messages = new List<MessageChat>(Messages);
-                }
+            }
+            catch
+            {
+                Unconnected();
             }
         }
         void SendMessage(object parametr)
         {
-            SendToServer(Message +"\0\0");
-            Message = "";
+            try
+            {
+                if (Message.Length >= 255)
+                {
+                    MessageBox.Show("Message too long");
+                }
+                else if(Message == "")
+                {
+                    MessageBox.Show("Message is empty");
+                }
+                else
+                {
+                    SendToServer(Message + "\0\0");
+                    Message = "";
+                }
+            }
+            catch
+            {
+                Unconnected();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
