@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\MyChatServer"
+    "\\MyChatServer",
+    "\\WpfApp13"
   ],
-  "SelectedNode": "\\MyChatServer\\ChatServer.sln",
+  "SelectedNode": "\\WpfApp13\\WpfApp13.sln",
   "PreviewInSolutionExplorer": false
 }

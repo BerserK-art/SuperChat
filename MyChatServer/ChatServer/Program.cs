@@ -57,7 +57,11 @@ namespace ChatServer
                     }
                     else
                     {
+
                         string message = client._name + ":" + something;
+                        DatabaseConnect databaseConnect = new DatabaseConnect
+                            ("localhost", "root","root", "chatbd");
+                        databaseConnect.InsertHistory(client._name, something);
                         if (buffer.Length > 0)
                         {
                             SendToAll(message);
