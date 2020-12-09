@@ -59,13 +59,13 @@ namespace ChatServer
                     {
 
                         string message = client._name + ":" + something;
-                        DatabaseConnect databaseConnect = new DatabaseConnect
-                            ("localhost", "root","root", "chatbd");
-                        databaseConnect.InsertHistory(client._name, something);
                         if (buffer.Length > 0)
                         {
                             SendToAll(message);
                              Console.WriteLine(message);
+                        DatabaseConnect databaseConnect = new DatabaseConnect
+                            ("localhost", "root","root", "chatbd");
+                        databaseConnect.InsertHistory(client._name, something.Remove(something.IndexOf('\0')));
                         }
                     }
                 }

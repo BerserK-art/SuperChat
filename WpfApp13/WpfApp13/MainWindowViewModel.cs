@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatServer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -59,7 +60,9 @@ namespace WpfApp13
 
             IPAddress ip = IPAddress.Parse("127.0.0.1");
             int port = 8888;
-           
+            DatabaseConnect databaseConnect = new DatabaseConnect
+                 ("localhost", "root", "root", "chatbd");
+            Messages = databaseConnect.SelectHistory(1);
             try
             {
                 client = new TcpClient();
