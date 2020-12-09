@@ -29,12 +29,12 @@ namespace ChatServer
         public List<MessageChat> SelectHistory(int count)
         {
             List<MessageChat> messages = new List<MessageChat>();
-            string query = $"SELECT TOP ({count.ToString()}) * FROM History ORDER BY id DESC";
-            MySqlDataAdapter dataAdapter = new MySqlDataAdapter(query,_mySqLConnection);
+            string query = $"SELECT * FROM History ORDER BY id DESC LIMIT {count}";
+            MySqlDataAdapter dataAdapter = new MySqlDataAdapter(query, _mySqLConnection);
             DataTable table = new DataTable();
             dataAdapter.Fill(table);
             int len = table.Rows.Count;
-            for(int i = len-1; i>=0; i--)
+            for (int i = len - 1; i >= 0; i--)
             {
                 string name = table.Rows[i].ItemArray[1].ToString();
                 string info = table.Rows[i].ItemArray[2].ToString();

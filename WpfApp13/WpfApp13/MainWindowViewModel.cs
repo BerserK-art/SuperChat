@@ -54,15 +54,11 @@ namespace WpfApp13
         
         public MainWindowViewModel()
         {
-
-            
-            Messages = new List<MessageChat>();
-
             IPAddress ip = IPAddress.Parse("127.0.0.1");
             int port = 8888;
             DatabaseConnect databaseConnect = new DatabaseConnect
                  ("localhost", "root", "root", "chatbd");
-            Messages = databaseConnect.SelectHistory(1);
+            Messages = databaseConnect.SelectHistory(10);
             try
             {
                 client = new TcpClient();

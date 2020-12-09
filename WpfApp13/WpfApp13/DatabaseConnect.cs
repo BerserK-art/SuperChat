@@ -29,7 +29,7 @@ namespace ChatServer
         public List<MessageChat> SelectHistory(int count)
         {
             List<MessageChat> messages = new List<MessageChat>();
-            string query = $"SELECT * FROM History ORDER BY id DESC LIMIT 10";
+            string query = $"SELECT * FROM History ORDER BY id DESC LIMIT {count}";
             MySqlDataAdapter dataAdapter = new MySqlDataAdapter(query,_mySqLConnection);
             DataTable table = new DataTable();
             dataAdapter.Fill(table);
